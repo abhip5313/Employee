@@ -1,0 +1,123 @@
+<form [formGroup]="_frmGroup" (ngSubmit)="Login()">
+  <div class="login-container">
+    <!-- Left Panel -->
+    <div class="left-panel">
+      <h1><i class="bi bi-unity"></i> StaffEase</h1>
+      <br>
+      <p>Welcome to StaffEase!!</p>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="right-panel">
+      <!-- Top-right User Type Dropdown -->
+      <div class="user-type-dropdown">
+        <select class="form-select" formControlName="UserType" required>
+          <option value="" disabled>-- Select User Type --</option>
+          <option value="hr">HR</option>
+          <option value="account">Account</option>
+          <option value="manager">Manager</option>
+        </select>
+      </div>
+
+      <!-- debug -->
+      <!-- {{ _frmGroup.value | json }} -->
+
+      <h2>Login</h2>
+
+      <!-- User ID -->
+      <input type="number" placeholder="Id" formControlName="Id" required>
+      <div class="text-danger" *ngIf="_frmGroup.get('Id')?.touched && _frmGroup.get('Id')?.invalid">
+        User ID is required
+      </div>
+
+      <!-- Password -->
+      <input type="password" placeholder="Password" formControlName="Pwd" required>
+      <div class="text-danger" *ngIf="_frmGroup.get('Pwd')?.touched && _frmGroup.get('Pwd')?.invalid">
+        Password is required
+      </div>
+
+      <!-- Error message -->
+      <div class="row mb-1" *ngIf="autherror">
+        <div class="alert alert-danger" role="alert">
+          {{ autherror }}
+        </div>
+      </div>
+
+      <!-- Login Button + Forgot link -->
+      <div class="d-flex justify-content-between align-items-center">
+        <button type="submit" class="login-btn">Login</button>
+
+        <!-- Forgot link only if usertype selected -->
+        <button type="button" class="btn btn-link p-0"
+                *ngIf="_frmGroup.get('UserType')?.value"
+                (click)="openForgot()">Forgot password?</button>
+      </div>
+
+      <!-- Forgot Password Section -->
+      <div *ngIf="forgot.open" class="card mt-4 p-3 shadow-sm">
+
+        <!-- Step 1: email + send OTP -->
+        <ng-container *ngIf="forgot.step === 1">
+          <h6>Forgot Password</h6>
+          <p class="text-muted mb-2">Enter your registered email !</p>
+
+          <div [formGroup]="forgotForm">
+            <input type="email" class="form-control" formControlName="email"
+                   placeholder="registered@company.com" />
+
+            <button class="btn btn-secondary mt-3" type="button"
+                    (click)="sendOtp()" [disabled]="forgotForm.invalid || sendingOtp">
+              {{ sendingOtp ? 'Sending…' : 'Send OTP' }}
+            </button>
+          </div>
+        </ng-container>
+
+        <!-- Step 2: verify OTP -->
+        <ng-container *ngIf="forgot.step === 2">
+          <h6>Verify OTP</h6>
+          <p class="text-muted">OTP sent to <b>{{ forgotForm.value.email }}</b></p>
+
+          <div [formGroup]="otpForm">
+            <input type="text" class="form-control" formControlName="otp"
+                   maxlength="6" placeholder="6-digit OTP" />
+
+            <div class="d-flex gap-2 mt-3">
+              <button class="btn btn-secondary" type="button"
+                      (click)="verifyOtp()" [disabled]="otpForm.invalid || verifyingOtp">
+                {{ verifyingOtp ? 'Verifying…' : 'Verify OTP' }}
+              </button>
+
+              <button class="btn btn-link" type="button"
+                      (click)="resendOtp()" [disabled]="resendCooldown>0">
+                Resend OTP <span *ngIf="resendCooldown>0">({{resendCooldown}}s)</span>
+              </button>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Step 3: reset password -->
+        <ng-container *ngIf="forgot.step === 3">
+          <h6>Set New Password</h6>
+          <div [formGroup]="resetForm">
+            <input type="password" class="form-control" formControlName="newPassword"
+                   placeholder="New password" />
+            <input type="password" class="form-control mt-2" formControlName="confirm"
+                   placeholder="Confirm new password" />
+
+            <small class="text-muted">
+              Min 8 chars, must include letters & numbers.
+            </small>
+
+            <button class="btn btn-success mt-3" type="button"
+                    (click)="resetPassword()" [disabled]="resetForm.invalid || resetting">
+              {{ resetting ? 'Saving…' : 'Update Password' }}
+            </button>
+          </div>
+        </ng-container>
+
+        <!-- Close -->
+        <button class="btn btn-outline-secondary mt-3" (click)="closeForgot()">Close</button>
+      </div>
+    </div>
+  </div>
+</form>

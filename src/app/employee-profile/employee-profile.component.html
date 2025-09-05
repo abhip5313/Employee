@@ -1,0 +1,23 @@
+<div class="profile-container" *ngIf="employee">
+  <h2>{{ employee.nm }}</h2>
+  <p><strong>Email:</strong> {{ employee.email }}</p>
+  <p><strong>Mobile:</strong> {{ employee.mobile }}</p>
+  <p><strong>Designation:</strong> {{ employee.designationNm }}</p>
+  <p><strong>Department:</strong> {{ employee.departmentNm }}</p>
+  <p><strong>Basic Salary:</strong> {{ employee.basicSalary }}</p>
+  <p><strong>PF:</strong> {{ employee.pf }}</p>
+
+  <h3>Attendance</h3>
+  <ul>
+    <li *ngFor="let att of employee.attendance">
+      {{ att.date }} - {{ att.status }} ({{ att.totalTime }})
+    </li>
+  </ul>
+
+  <h3>Ratings</h3>
+  <ul>
+    <li *ngFor="let r of employee.ratings">
+      ⭐ {{ r.stars }} - {{ r.comments }}
+    </li>
+  </ul>
+</div>

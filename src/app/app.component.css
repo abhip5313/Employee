@@ -1,0 +1,133 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Header */
+header {
+  height: 50px;
+  background-color: #000;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-bottom: 1px solid black;
+}
+
+/* Layout container */
+.layout {
+  display: flex;
+  height: calc(100vh - 50px); /* Full height minus header */
+}
+
+/* Sidebar */
+.aside {  
+  width: 220px;
+  background-color: #e4d8d8;
+  padding: 30px 15px;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Sidebar Links */
+aside a {
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 12px 15px;
+  border-radius: 0px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 7px;
+  position: relative; /* 👈 Badge position साठी */
+}
+
+aside a i {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+/* Hover effect */
+aside a:hover {
+  background-color: #c9c6c6;
+  color: #000;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border-radius: 0px;
+}
+
+/* Active route */
+aside a.active {
+  background-color:#ffffff;
+  color: #000;
+  font-weight: 600;
+  border-radius: 0px;
+}
+
+/* Main content */
+main {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+/* 🔴 Notification Badge */
+.notification-badge {
+  position: absolute;
+  top: 6px;
+  right: 15px;
+  background: red;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 3px 6px;
+  line-height: 1;
+}
+
+/* Mobile responsive overrides */
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+    z-index: 1001;
+  }
+
+  .aside {
+    position: fixed;
+    top: 90px;
+    left: -100%;
+    width: 220px;
+    height: calc(100vh - 90px);
+    background-color: #e4d8d8;
+    transition: left 0.3s ease;
+    z-index: 1000;
+  }
+
+  .aside.mobile-open {
+    left: 0;
+  }
+
+  main {
+    margin-left: 0 !important;
+  }
+}

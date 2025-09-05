@@ -1,0 +1,135 @@
+/* 🌿 Salary Management Page CSS (Sky Blue + Light Orange Theme) */
+
+/* Base */
+body {
+  background: #fafafa;
+  color: #333;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Heading */
+h4 {
+  color: #444;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Nav Tabs */
+.nav-tabs {
+  border-bottom: 2px solid #ddd;
+}
+.nav-tabs .nav-link {
+  color: #555;
+  border: none;
+  background: #f5f5f5;
+  padding: 0.6rem 1rem;
+  border-radius: 0.4rem 0.4rem 0 0;
+  transition: background 0.2s;
+}
+.nav-tabs .nav-link.active {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-bottom: none;
+  color: #000;
+}
+.nav-tabs .nav-link:hover {
+  background: #eaeaea;
+}
+
+/* Form Controls */
+.form-control,
+.form-select {
+  border: 1px solid #ccc;
+  border-radius: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 14px;
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: #66afe9; /* sky blue focus */
+  outline: none;
+  box-shadow: 0 0 3px rgba(102,175,233,.5);
+}
+
+/* Buttons */
+.btn {
+  border-radius: 0.4rem;
+  padding: 0.45rem 1rem;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+/* Primary (Sky Blue) */
+.btn-primary {
+  border: 1px solid #007bff;
+  background: #007bff;
+  color: #fff;
+}
+.btn-primary:hover {
+  background: #0056b3;
+  border-color: #0056b3;
+}
+
+/* Info Button */
+.btn-info {
+  border: 1px solid #17a2b8;
+  background: #17a2b8;
+  color: #fff;
+}
+.btn-info:hover {
+  background: #117a8b;
+  border-color: #117a8b;
+}
+
+/* Secondary Button */
+.btn-secondary {
+  border: 1px solid #6c757d;
+  background: #6c757d;
+  color: #fff;
+}
+.btn-secondary:hover {
+  background: #545b62;
+  border-color: #545b62;
+}
+
+/* Success (Light Orange) */
+.btn-success {
+  border: 1px solid #ff9800;
+  background: #ff9800;
+  color: #fff;
+}
+.btn-success:hover {
+  background: #e68900;
+  border-color: #e68900;
+}
+
+/* Tables */
+.table {
+  border: 1px solid #ddd;
+  background: #fff;
+}
+.table thead.table-dark {
+  background: #e3f2fd; /* light sky blue */
+  color: #000;
+}
+.table-striped tbody tr:nth-child(odd) {
+  background: #fff;
+}
+.table-striped tbody tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+/* Modal */
+.modal-content {
+  border-radius: 0.5rem;
+}
+.modal-header {
+  border-bottom: 1px solid #ddd;
+}
+.modal-footer {
+  border-top: 1px solid #ddd;
+}

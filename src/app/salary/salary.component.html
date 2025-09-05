@@ -1,0 +1,139 @@
+<div class="container mt-4">
+  <h4 class="mb-3">Salary Management</h4>
+
+  <!-- Nav Tabs -->
+  <ul ngbNav #nav="ngbNav" class="nav-tabs">
+    <li [ngbNavItem]="1">
+      <a ngbNavLink>Salary</a>
+      <ng-template ngbNavContent>
+        <!-- Salary Form -->
+        <div class="salary container mt-4">
+          <form [formGroup]="_frmGroup" (ngSubmit)="save()">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Department</label>
+                <select class="form-select" formControlName="departmentId">
+                  <option value="">Select Department</option>
+                  <ng-container *ngFor="let dept of departments">
+                    <option *ngIf="dept.isActive" [value]="dept.id">
+                      {{ dept.departmentnm }}
+                    </option>
+                  </ng-container>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Employee Id</label>
+                <input type="text" class="form-control" placeholder="EmployeeId"
+                  formControlName="employeeId" (change)="onEmployeeIdChange()" />
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Basic Salary</label>
+                <input type="text" class="form-control" placeholder="Insert Salary"
+                  formControlName="basicSalary" readonly />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Employee Name</label>
+                <input type="text" class="form-control" placeholder="Employee name"
+                  formControlName="employeeName" readonly />
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Deductions</label>
+                <input type="text" class="form-control" placeholder="Monthly Deductions"
+                  formControlName="deductions" />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Allowances</label>
+                <input type="text" class="form-control" placeholder="Monthly Allowances"
+                  formControlName="allowances" />
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Pay Date</label>
+              <input type="date" class="form-control" formControlName="payDate" />
+            </div>
+
+            <div class="text-center mt-md-2">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </div>
+      </ng-template>
+    </li>
+
+    <li [ngbNavItem]="2">
+      <a ngbNavLink>Paid Salaries</a>
+      <ng-template ngbNavContent>
+        <!-- Paid Salaries Table -->
+        <div class="table-responsive mt-3">
+          <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+              <tr>
+                <th>Employee ID</th>
+                <th>Employee Name</th>
+                <th>Department</th>
+                <th>Basic Salary</th>
+                <th>Allowances</th>
+                <th>Deductions</th>
+                <th>Net Salary</th>
+                <th>Pay Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of payments; trackBy: trackById">
+                <td>{{ p.employeeId }}</td>
+                <td>{{ p.employeeName }}</td>
+                <td>{{ p.departmentName }}</td>
+                <td>{{ p.basicSalary }}</td>
+                <td>{{ p.allowances }}</td>
+                <td>{{ p.deductions }}</td>
+                <td>{{ getNet(p) }}</td>
+                <td>{{ p.payDate | date:'mediumDate' }}</td>
+                <td>
+                  <button class="btn btn-sm btn-info" (click)="viewSlip(p)">View Slip</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-template>
+    </li>
+  </ul>
+
+  <div [ngbNavOutlet]="nav" class="mt-3"></div>
+
+  <!-- Modal -->
+  <div class="modal fade show d-block" tabindex="-1" *ngIf="showModal" style="background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Salary Slip</h5>
+          <button type="button" class="btn-close" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body" *ngIf="selectedSlip">
+          <p><strong>Employee:</strong> {{ selectedSlip.employeeName }}</p>
+          <p><strong>Department:</strong> {{ selectedSlip.departmentName }}</p>
+          <p><strong>Basic Salary:</strong> {{ selectedSlip.basicSalary }}</p>
+          <p><strong>Allowances:</strong> {{ selectedSlip.allowances }}</p>
+          <p><strong>Deductions:</strong> {{ selectedSlip.deductions }}</p>
+          <p><strong>Net Salary:</strong> {{ getNet(selectedSlip) }}</p>
+          <p><strong>Pay Date:</strong> {{ selectedSlip.payDate | date:'mediumDate' }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+          <button type="button" class="btn btn-success" (click)="downloadSlip(selectedSlip!)">Download PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

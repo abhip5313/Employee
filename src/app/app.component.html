@@ -1,0 +1,85 @@
+<app-login *ngIf="!isLoggedIn"></app-login>
+
+<div *ngIf="isLoggedIn">
+  <header>
+    <button class="hamburger" (click)="toggleSidebar()">
+      <i class="bi bi-list"></i>
+    </button>
+    <h1><i class="bi bi-unity"></i> StaffEase</h1>
+  </header>
+
+  <div class="layout">
+    <aside class="aside" [class.mobile-open]="sidebarOpen" style="background-color: rgb(120, 119, 119);">
+
+      <!-- HR Aside -->
+      <div *ngIf="role === 'hr'">
+        <a routerLink="/home" routerLinkActive="active" (click)="closeSidebar()">
+          <i class="bi bi-microsoft"></i> Dashboard
+        </a>
+        <a routerLink="/employee" routerLinkActive="active" (click)="closeSidebar()">
+          <i class="bi bi-people-fill"></i> Employee
+        </a>
+        <a routerLink="/department" routerLinkActive="active" (click)="closeSidebar()">
+          <i class="bi bi-building-fill"></i> Department
+        </a>
+        <a routerLink="/attendance" routerLinkActive="active" (click)="closeSidebar()">
+          <i class="bi bi-calendar3"></i> Attendance
+        </a>
+        <a routerLink="/salary" routerLinkActive="active" (click)="closeSidebar()">
+          <i class="bi bi-cash-coin"></i> Salary
+        </a>
+        <a routerLink="/rating" routerLinkActive="active" (click)="closeSidebar()">
+          <i class="bi bi-clipboard-data-fill"></i> Rating
+        </a>
+      </div>
+
+      <!-- Account Aside -->
+     <!-- Account Aside -->
+<div *ngIf="role === 'account'">
+  <hr />
+  <h5 style="color: white; padding-left: 10px;">Account Dept.</h5>
+  <a routerLink="/account/dashboard" routerLinkActive="active" (click)="closeSidebar()">
+    <i class="bi bi-receipt"></i> Dashboard
+  </a>
+  <a routerLink="/payments" routerLinkActive="active" (click)="closeSidebar()">
+    <i class="bi bi-credit-card"></i> Payments
+  </a>
+
+  <!-- 🔔 Salary Notification with badge -->
+  <a routerLink="/salarynotification" routerLinkActive="active" (click)="closeSidebar()" class="notification-link">
+    <i class="bi bi-bell-fill"></i> Salary Notification
+    <span *ngIf="unpaidCount > 0" class="notification-badge">{{ unpaidCount }}</span>
+  </a>
+</div>
+
+      <!-- Manager Aside -->
+      <div *ngIf="role === 'manager'">
+        <hr />
+        <h5 style="color: white; padding-left: 10px;">Manager Dashboard</h5>
+        <a routerLink="/manager-dashboard" routerLinkActive="active" (click)="closeSidebar()">
+          <i class="bi bi-receipt"></i> Dashboard
+        </a>
+        <a routerLink="/payments" routerLinkActive="active" (click)="closeSidebar()">
+          <i class="bi bi-credit-card"></i> Payments
+        </a>
+        <a routerLink="/manager-employees" routerLinkActive="active" (click)="closeSidebar()">
+          <i class="bi bi-cash-stack"></i> Employees
+        </a>
+        <a routerLink="/manager-employee-access" routerLinkActive="active" (click)="closeSidebar()">
+          <i class="bi bi-graph-up"></i> Employee Access
+        </a>
+        <a routerLink="/salarynotification" routerLinkActive="active" (click)="closeSidebar()">
+          <i class="bi bi-bell-fill"></i> Reports
+        </a>
+      </div>
+
+      <a (click)="logout()">
+        <i class="bi bi-box-arrow-left"></i> Sign Out
+      </a>
+    </aside>
+
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

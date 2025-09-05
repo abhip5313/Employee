@@ -1,0 +1,157 @@
+<div class="container-fluid mt-3">
+  <h3 class="mb-4 text-primary">Manage Employees</h3>
+
+  <!-- Tabs -->
+  <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
+
+    <!-- Add Employee Tab -->
+    <li [ngbNavItem]="1">
+      <button ngbNavLink>Add Employee</button>
+      <ng-template ngbNavContent>
+        <div class="card p-4 shadow mt-3">
+          <h4 class="mb-4 text-primary">Add Employee</h4>
+
+          <form [formGroup]="employeeForm" (ngSubmit)="addEmployee()">
+            <div class="row g-3">
+
+              <!-- Column 1 -->
+              <div class="col-md-6">
+                <!-- Name -->
+                <div class="mb-3">
+                  <label class="form-label">Name</label>
+                  <input type="text" class="form-control" placeholder="Enter Name" formControlName="name" />
+                </div>
+
+                <!-- Email -->
+              <!-- Email -->
+<div class="mb-3 position-relative">
+  <label class="form-label">Email</label>
+  <div class="input-group">
+    <input type="email"
+           class="form-control"
+           placeholder="Enter Email"
+           formControlName="email" />
+
+    <!-- Check Button -->
+    <button type="button"
+            class="btn btn-outline-primary"
+            (click)="checkEmail()"
+            [disabled]="employeeForm.get('email')?.invalid">
+      Check
+    </button>
+  </div>
+
+  <!-- Required Error -->
+  <div *ngIf="employeeForm.get('email')?.hasError('required') && employeeForm.get('email')?.touched"
+       class="text-danger mt-1">
+    Email is required
+  </div>
+
+  <!-- Invalid Format Error -->
+  <div *ngIf="employeeForm.get('email')?.hasError('email') && employeeForm.get('email')?.touched"
+       class="text-danger mt-1">
+    Please enter a valid email address
+  </div>
+
+  <!-- Danger (exists) -->
+  <div *ngIf="emailExists === true"
+       class="text-danger mt-1">
+    Email already exists!
+  </div>
+
+  <!-- Success (not exists) -->
+  <div *ngIf="emailExists === false && employeeForm.get('email')?.valid"
+       class="text-success mt-1">
+    Email available
+  </div>
+</div>
+
+
+                <!-- Phone -->
+                <div class="mb-3">
+                  <label class="form-label">Phone No</label>
+                  <input type="text" class="form-control" placeholder="Phone Number" formControlName="phone" />
+                </div>
+              </div>
+
+              <!-- Column 2 -->
+              <div class="col-md-6">
+                <!-- Password -->
+                <div class="mb-3">
+                  <label class="form-label">Password</label>
+                  <input type="password" class="form-control" placeholder="Password" formControlName="password" />
+                </div>
+
+                <!-- Designation Dropdown -->
+                <div class="mb-3">
+                  <label class="form-label">Designation</label>
+                  <select class="form-select" formControlName="designationId">
+                    <option value="">-- Select Designation --</option>
+                    <option *ngFor="let d of designations" [value]="d.id">{{ d.designationNm }}</option>
+                  </select>
+                </div>
+
+                <!-- Profile Pic -->
+                <div class="mb-3">
+                  <label class="form-label">Profile Picture</label>
+                  <input type="file" class="form-control" (change)="onFileSelected($event)" />
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid mt-4">
+                  <button type="submit" class="btn btn-success"
+                          [disabled]="emailExists || employeeForm.invalid">
+                    Add Employee
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </ng-template>
+    </li>
+
+    <!-- Employee Details Tab -->
+    <li [ngbNavItem]="2">
+      <button ngbNavLink>Employee Details</button>
+      <ng-template ngbNavContent>
+        <div class="card p-3 shadow mt-3">
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered align-middle text-center">
+              <thead>
+                <tr>
+                  <th>Employee ID</th>
+                  <th>Profile Pic</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone No</th>
+                  <th>Designation</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let emp of employees">
+                  <td>{{ emp.id }}</td>
+                  <td>
+                    <img [src]="emp.profilePic || 'assets/user.png'" alt="profile" class="profile-pic" />
+                  </td>
+                  <td>{{ emp.name }}</td>
+                  <td>{{ emp.email }}</td>
+                  <td>{{ emp.phone }}</td>
+                  <td>{{ emp.designationName }}</td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-danger" (click)="deleteEmployee(emp.id)">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-template>
+    </li>
+
+  </ul>
+
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
+</div>

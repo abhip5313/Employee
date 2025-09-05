@@ -1,0 +1,159 @@
+<div class="container-fluid mt-3">
+  <div class="row">
+    <!-- 🔹 Left Column: Designation -->
+    <div class="col-md-6">
+      <h4 class="mb-3">Designation</h4>
+      <ul ngbNav #designationNav="ngbNav" [(activeId)]="designationActive" class="nav-tabs">
+        
+        <!-- Add Designation -->
+        <li [ngbNavItem]="1">
+          <button ngbNavLink>Add</button>
+          <ng-template ngbNavContent>
+            <form [formGroup]="designationForm">
+              <div class="row d-flex mt-4">
+
+                <!-- Department Dropdown -->
+                <div class="col-md-5">
+                 <select class="form-select" formControlName="departmentId">
+  <option value="">-- Select Department --</option>
+  <option *ngFor="let db of activeDepartments" [value]="db.id">
+    {{ db.departmentnm }}
+  </option>
+</select>
+
+                  <div *ngIf="designationForm.get('departmentId')!.invalid && 
+                              (designationForm.get('departmentId')!.touched || designationForm.get('departmentId')!.dirty)"
+                       class="text-danger mt-1">
+                    Department Required!
+                  </div>
+                </div>
+
+                <!-- Designation Input -->
+                <div class="col-md-4">
+                  <input type="text" name="designation" id="designation" class="form-control"
+                    placeholder="Enter Designation Name" required formControlName="designationnm">
+                  <div *ngIf="designationForm.get('designationnm')!.invalid && 
+                              (designationForm.get('designationnm')!.touched || designationForm.get('designationnm')!.dirty)"
+                       class="text-danger mt-1">
+                    Designation Required!
+                  </div>
+                </div>
+
+                <!-- Save Button -->
+                <div class="col-md-3">
+                  <button type="button" class="btn btn-outline-success w-100" (click)="saveDesignation()">Save</button>
+                </div>
+              </div>
+            </form>
+          </ng-template>
+        </li>
+
+        <!-- Designation Details -->
+        <li [ngbNavItem]="2">
+          <button ngbNavLink>Details</button>
+          <ng-template ngbNavContent>
+            <div class="col-12 mb-3 d-flex gap-2">
+              <input type="search" class="form-control" placeholder="Search" />
+              <button class="btn btn-outline-primary">Search</button>
+            </div>
+
+            <div class="table-responsive">
+             <table class="table table-striped table-bordered align-middle text-center">
+              <thead>
+                <tr>
+                  <th>Sr No</th>
+                  <th>Designation Name</th>
+                  <th>Department</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let dg of designations; index as i">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ dg.name }}</td>
+                  <td>{{ dg.departmentNm }}</td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-danger" (click)="deleteDesignation(dg.id)">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+             </table>
+            </div>
+          </ng-template>
+        </li>
+      </ul>
+      <div [ngbNavOutlet]="designationNav" class="mt-2"></div>
+    </div>
+
+    <!-- 🔹 Right Column: Department -->
+    <div class="col-md-6">
+      <h4 class="mb-3">Department</h4>
+      <ul ngbNav #nav="ngbNav" [(activeId)]="active" (navChange)="onTabChange($event)" class="nav-tabs">
+        
+        <!-- Add Department -->
+        <li [ngbNavItem]="1">
+          <button ngbNavLink>Add</button>
+          <ng-template ngbNavContent>
+            <form [formGroup]="_frmGroup">
+              <div class="row d-flex mt-4">
+                <div class="col-md-7">
+                  <input type="text" name="department" id="department" class="form-control"
+                    placeholder="Enter New Department Name" required formControlName="departmentnm">
+                  <div *ngIf="_frmGroup.get('departmentnm')!.invalid && 
+                              (_frmGroup.get('departmentnm')!.touched || _frmGroup.get('departmentnm')!.dirty)"
+                       class="text-danger mt-2">
+                    Required!
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <button type="button" class="btn btn-outline-success w-100" (click)="save()">Save</button>
+                </div>
+              </div>
+            </form>
+          </ng-template>
+        </li>
+
+        <!-- Department Details -->
+        <li [ngbNavItem]="2">
+          <button ngbNavLink>Details</button>
+          <ng-template ngbNavContent>
+            <div class="col-12 mb-3 d-flex gap-2">
+              <input type="search" class="form-control" placeholder="Search" />
+              <button class="btn btn-outline-primary">Search</button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-striped table-bordered align-middle text-center">
+                <thead>
+                  <tr>
+                    <th>Sr No</th>
+                    <th>Department Name</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let db of departments; index as i">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ db.departmentnm }}</td>
+                    <td>
+                      <label class="switch">
+                        <input type="checkbox" [checked]="db.isActive" (change)="toggleStatus(db)">
+                        <span class="slider round"></span>
+                      </label>
+                      <span class="ms-2">{{ db.isActive ? 'Active' : 'Inactive' }}</span>
+                    </td>
+                    <td>
+                    <button class="btn btn-sm btn-outline-danger" (click)="deleteDepartment(db.id)">Delete</button>
+                  </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </ng-template>
+        </li>
+      </ul>
+      <div [ngbNavOutlet]="nav" class="mt-2"></div>
+    </div>
+  </div>
+</div>

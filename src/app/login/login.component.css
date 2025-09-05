@@ -1,0 +1,124 @@
+/* Whole container */
+.login-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+/* Left branding panel */
+/* Left branding panel */
+.left-panel {
+  flex: 1;
+  background: linear-gradient(135deg, #007bff, #00bcd4);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 3rem;
+  border-top-right-radius: 80px;
+  border-bottom-right-radius: 80px;
+}
+
+.left-panel h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.left-panel p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* Right login form panel */
+.right-panel {
+  flex: 1;
+  background: #f9f9f9;
+  padding: 3rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: -4px 0 12px rgba(0,0,0,0.05);
+}
+
+/* Dropdown on top */
+.user-type-dropdown {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  width: 180px;
+}
+
+/* Headings */
+.right-panel h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-weight: 600;
+}
+
+/* Inputs */
+.right-panel input,
+.right-panel select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.4rem;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-size: 15px;
+  transition: 0.2s;
+}
+.right-panel input:focus,
+.right-panel select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.15);
+}
+
+/* Login button */
+.login-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 0.4rem;
+  padding: 0.6rem 1.4rem;
+  font-size: 15px;
+  transition: 0.2s;
+}
+.login-btn:hover {
+  background: #0069d9;
+}
+
+/* Forgot link */
+.btn-link {
+  font-size: 14px;
+  color: #007bff;
+  text-decoration: none;
+}
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+/* Forgot password card */
+.card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 0.5rem;
+}
+.card h6 {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.card input {
+  margin-bottom: 0.6rem;
+}
+
+/* Alerts */
+.alert {
+  font-size: 14px;
+  padding: 0.6rem 1rem;
+  border-radius: 0.4rem;
+}

@@ -1,0 +1,126 @@
+<div class="p-4">
+  <h2 class="text-xl font-semibold mb-4">Paid Salary Notifications</h2>
+
+  <div *ngIf="loading" class="text-center p-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <table class="table table-bordered" *ngIf="!loading && payments.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Employee</th>
+        <th>Department</th>
+        <th>Net Salary</th>
+        <th>Pay Date</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of payments">
+        <td>{{ p.id }}</td>
+        <td>{{ p.employeeName }}</td>
+        <td>{{ p.departmentName }}</td>
+        <td>{{ getNet(p) | number:'1.2-2' }}</td>
+        <td>{{ p.payDate | date:'dd-MMM-yyyy' }}</td>
+        <td>
+          <button class="btn btn-sm btn-outline-primary" (click)="viewSlip(p)">
+            View Slip
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && payments.length === 0" class="alert alert-info">
+    No payments found.
+  </div>
+</div>
+
+<!-- Salary Slip Modal -->
+<div class="modal fade show d-block" tabindex="-1" *ngIf="showModal" style="background:rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content p-4">
+      <div class="modal-header">
+        <h5 class="modal-title">Salary Slip</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <div class="modal-body" *ngIf="selectedSlip">
+        <!-- Salary Slip Layout -->
+        <div class="border p-4" style="font-family: Arial, sans-serif;">
+          <div class="text-center mb-3">
+            <h3 class="m-0">Company Name</h3>
+            <small>[Write Street Address Here]</small>
+          </div>
+
+          <div class="mb-3">
+            <p><strong>Employee Name:</strong> {{ selectedSlip.employeeName }}</p>
+            <p><strong>Designation:</strong> {{ selectedSlip.designation || '-' }}</p>
+            <p><strong>Month:</strong> {{ selectedSlip.payDate | date:'MMM' }} <strong>Year:</strong> {{ selectedSlip.payDate | date:'yyyy' }}</p>
+          </div>
+
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Earnings</th>
+                <th>Amount</th>
+                <th>Deductions</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Basic Salary</td>
+                <td>{{ selectedSlip.basicSalary | number:'1.2-2' }}</td>
+                <td>Deductions</td>
+                <td>{{ selectedSlip.deductions | number:'1.2-2' }}</td>
+              </tr>
+              <tr>
+                <td>Allowances</td>
+                <td>{{ selectedSlip.allowances | number:'1.2-2' }}</td>
+                <td colspan="2"></td>
+              </tr>
+              <tr class="table-light fw-bold">
+                <td>Total Addition</td>
+                <td>
+                  {{
+                    (selectedSlip.basicSalary + selectedSlip.allowances) | number:'1.2-2'
+                  }}
+                </td>
+                <td>Total Deduction</td>
+                <td>{{ selectedSlip.deductions | number:'1.2-2' }}</td>
+              </tr>
+              <tr class="table-light fw-bold">
+                <td colspan="2">NET Salary</td>
+                <td colspan="2">{{ getNet(selectedSlip) | number:'1.2-2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="mt-3"><strong>Pay Date:</strong> {{ selectedSlip.payDate | date:'dd-MMM-yyyy' }}</p>
+          <p><strong>Bank:</strong> {{ selectedSlip.bankName || 'N/A' }}</p>
+          <p><strong>Cheque #:</strong> {{ selectedSlip.chequeNo || 'N/A' }}</p>
+
+          <div class="row mt-4">
+            <div class="col text-center">
+              <p>____________________</p>
+              <p><strong>Employee Signature</strong></p>
+            </div>
+            <div class="col text-center">
+              <p>____________________</p>
+              <p><strong>Director</strong></p>
+            </div>
+          </div>
+        </div>
+        <!-- End Salary Slip Layout -->
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

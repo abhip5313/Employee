@@ -1,0 +1,98 @@
+/* 👨‍💼 Salary Notifications Page CSS */
+
+/* Base */
+body {
+  background: #fafafa;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #333;
+  font-size: 15px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Heading + Refresh */
+h4 {
+  font-weight: 600;
+  color: #007bff; /* sky blue */
+}
+.btn-outline-primary {
+  border: 1px solid #007bff;
+  color: #007bff;
+  border-radius: 0.4rem;
+  font-size: 14px;
+  padding: 0.3rem 0.75rem;
+  transition: 0.2s;
+}
+.btn-outline-primary:hover {
+  background: #007bff;
+  color: #fff;
+}
+
+/* Table */
+.table {
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 0.4rem;
+  overflow: hidden;
+}
+.table th, .table td {
+  padding: 0.6rem;
+  vertical-align: middle;
+}
+.table-hover tbody tr:hover {
+  background: #f1faff; /* light blue hover */
+}
+.table-light {
+  background: #e3f2fd; /* light sky blue header */
+}
+
+/* Alerts */
+.alert {
+  border-radius: 0.4rem;
+  font-size: 14px;
+  padding: 0.6rem 1rem;
+  margin-bottom: 1rem;
+}
+.alert-info {
+  background: #eaf6ff;
+  border: 1px solid #b3e0ff;
+  color: #004085;
+}
+.alert-danger {
+  background: #ffe6e6;
+  border: 1px solid #f5c2c2;
+  color: #b71c1c;
+}
+.alert-warning {
+  background: #fff4e0;
+  border: 1px solid #ffd699;
+  color: #805b00;
+}
+
+/* Action Buttons */
+.btn-success {
+  background: #ff9800;   /* light orange accent */
+  border: 1px solid #ff9800;
+  color: #fff;
+  border-radius: 0.4rem;
+  padding: 0.3rem 0.7rem;
+  font-size: 13px;
+}
+.btn-success:hover {
+  background: #e68900;
+  border-color: #e68900;
+}
+
+/* Spinner */
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Paid Badge */
+.badge.bg-success {
+  background: #4caf50 !important;
+  font-size: 12px;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.3rem;
+}

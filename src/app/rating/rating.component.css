@@ -1,0 +1,86 @@
+/* 🌟 Rating Page CSS (Sky Blue + Light Orange Theme) */
+
+/* Base */
+body {
+  background: #fafafa;
+  color: #333;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Heading */
+h4 {
+  color: #444;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Form Controls */
+.form-control,
+.form-select,
+textarea {
+  border: 1px solid #ccc;
+  border-radius: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 14px;
+  width: 100%;
+}
+.form-control:focus,
+.form-select:focus,
+textarea:focus {
+  border-color: #66afe9; /* sky blue */
+  outline: none;
+  box-shadow: 0 0 3px rgba(102,175,233,.5);
+}
+
+/* Buttons */
+.btn {
+  border-radius: 0.4rem;
+  padding: 0.45rem 1rem;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+/* Primary (Sky Blue) */
+.btn-primary {
+  border: 1px solid #007bff;
+  background: #007bff;
+  color: #fff;
+}
+.btn-primary:hover {
+  background: #0056b3;
+  border-color: #0056b3;
+}
+
+/* ⭐ Star Rating */
+.star-rating {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.star-rating input {
+  display: none; /* hide radio */
+}
+
+.star-rating label {
+  font-size: 28px;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+/* hover effect */
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: #ff9800; /* light orange hover */
+}
+
+/* checked effect */
+.star-rating input:checked ~ label {
+  color: #ff9800; /* light orange when selected */
+}

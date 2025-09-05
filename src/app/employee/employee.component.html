@@ -1,0 +1,273 @@
+<h4 class="mb-4 heading-title">Employee</h4>
+<ul ngbNav #nav="ngbNav" [(activeId)]="active" (navChange)="onTabChange($event)" class="nav-tabs">
+  <!-- Add Tab -->
+  <li [ngbNavItem]="1">
+    <button ngbNavLink>Add</button>
+    <ng-template ngbNavContent>
+      <div class="modal-body">
+        <div class="container">
+          <form [formGroup]="_frmGroup">
+            <div class="row g-3">
+              <!-- Name -->
+              <div class="col-md-6">
+                <label for="empName" class="form-label">Name</label>
+                <input type="text" class="form-control" id="empName" placeholder="Enter Name" required formControlName="Nm">
+              </div>
+
+              <!-- Email + OTP -->
+              <div class="col-md-6">
+                <label for="emailId" class="form-label">Email ID</label>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <input 
+                    type="email" 
+                    class="form-control" 
+                    id="emailId" 
+                    placeholder="Enter Email" 
+                    required 
+                    formControlName="Email"
+                    [readonly]="isEmailVerified"
+                    style="flex: 1;">
+                  
+                  <button 
+                    class="btn btn-outline-primary btn-sm rounded-pill"
+                    type="button" 
+                    (click)="sendOtp()"
+                    [disabled]="isVerifyingEmail || isEmailVerified">
+                    {{ isVerifyingEmail ? 'Sending...' : (isEmailVerified ? 'Verified' : 'Send OTP') }}
+                  </button>
+
+                  <span *ngIf="isEmailVerified" style="color:green; font-size:20px;">✔</span>
+                </div>
+
+                <div *ngIf="otpSent && !isEmailVerified" class="mt-2" style="display:flex; gap:10px; align-items:center;">
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    placeholder="Enter OTP" 
+                    [(ngModel)]="otpInput" 
+                    name="otpInput"
+                    formControlName="otp"
+                    style="flex:1;">
+                  <button 
+                    class="btn btn-outline-success btn-sm"
+                    type="button"
+                    (click)="verifyOtp()"
+                    [disabled]="isVerifyingEmail">
+                    Verify OTP
+                  </button>
+                </div>
+              </div>
+
+              <!-- Password -->
+              <div class="col-md-6">
+                <label for="pwd" class="form-label">Password</label>
+                <div class="input-group">
+                  <input 
+                    [type]="showPassword ? 'text' : 'password'" 
+                    class="form-control" 
+                    id="pwd" 
+                    placeholder="Enter Password" 
+                    required 
+                    formControlName="Pwd">
+                  <button 
+                    class="btn btn-outline-secondary" 
+                    type="button" 
+                    (click)="showPassword = !showPassword">
+                    <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Mobile -->
+              <div class="col-md-6">
+                <label for="mobile" class="form-label">Mobile Number</label>
+                <input type="tel" class="form-control" id="mobile" placeholder="Enter Mobile Number" required formControlName="Mobile">
+              </div>
+
+              <!-- Department -->
+              <div class="col-md-6">
+                <label for="department" class="form-label">Department</label>
+                <select class="form-select" id="department" formControlName="Departmentnm">
+                  <option value="" selected disabled>Select Department</option>
+                  <option *ngFor="let dept of departments" [value]="dept.id">
+                    {{ dept.departmentnm || dept.name }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Designation -->
+              <div class="col-md-6">
+                <label for="designation" class="form-label">Designation</label>
+                <select 
+                  class="form-select" 
+                  id="designation" 
+                  formControlName="Designationnm"
+                  [disabled]="!designationsForSelectedDept.length">
+                  <option value="" selected disabled *ngIf="!designationsForSelectedDept.length">
+                    Select Department first
+                  </option>
+                  <option *ngFor="let dg of designationsForSelectedDept" [value]="dg.id">
+                    {{ dg.name }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Joining Date -->
+              <div class="col-md-6">
+                <label for="JoiningDate" class="form-label">Joining Date</label>
+                <input type="date" class="form-control" id="JoiningDate" formControlName="JoiningDate">
+              </div>
+
+              <!-- Profile Picture -->
+              <div class="col-md-6">
+                <label for="profilePic" class="form-label">Profile Picture</label>
+                <input type="file" class="form-control" id="profilePic" (change)="onFileSelected($event)" accept="image/*">
+                <div *ngIf="previewUrl" class="mt-2 text-center">
+                  <img [src]="previewUrl" alt="Preview" width="100" height="100" style="border-radius: 50%;">
+                </div>
+              </div>
+
+              <!-- Salary -->
+              <div class="col-md-6">
+                <label for="basicSalary" class="form-label">Basic Salary</label>
+                <input type="number" class="form-control" id="basicSalary" placeholder="Enter Basic Salary" formControlName="BasicSalary">
+              </div>
+              <div class="col-md-6">
+                <label for="Pf" class="form-label">Pf</label>
+                <input type="number" class="form-control" id="Pf" placeholder="Enter Pf" formControlName="Pf">
+              </div>
+            </div>
+            <div class="text-center mt-md-4">
+              <button type="button" class="btn btn-outline-success w-50" (click)="save()">Add</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </ng-template>
+  </li>
+
+  <!-- Details Tab -->
+  <li [ngbNavItem]="2">
+    <button ngbNavLink>Details</button>
+    <ng-template ngbNavContent>
+      <div class="col-12 col-md-6 mb-4" style="display: flex; gap: 10px;">
+        <input type="number" class="form-control" [(ngModel)]="searchId" name="searchId" placeholder="Enter Employee Id"
+          (keyup.enter)="loadEmployeeById(searchId)" (change)="loadEmployeeById(searchId)" />
+        <button class="btn btn-primary w-25" (click)="open(Update, getEmployeeById(searchId))">Update</button>
+      </div>
+
+      <!-- 🔍 Search by Name -->
+      <div class="col-12 col-md-6 mb-3">
+        <input type="text" class="form-control" placeholder="Search employee by name" [(ngModel)]="searchName" />
+      </div>
+
+      <!-- Table -->
+      <div class="table-responsive" *ngIf="active === 2">
+        <table class="table table-bordered text-center align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Emp Id</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Department</th>
+              <th>Designation</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let db of filteredEmployees; index as i">
+              <td>{{db.id}}</td>
+              <td>{{db.nm}}</td>
+              <td>{{db.email}}</td>
+              <td>{{db.departmentnm}}</td>
+              <td>{{db.designationnm}}</td>
+              <td>
+                <button class="btn btn-outline-danger btn-sm" (click)="deleteEmployee(db.id)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-template>
+  </li>
+</ul>
+
+<div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+<!-- Edit Modal -->
+<ng-template #Update let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Update Profile</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+
+  <div class="modal-body">
+    <form [formGroup]="_frmGroup">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Name</label>
+          <input type="text" class="form-control" formControlName="Nm">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" formControlName="Email">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Mobile</label>
+          <input type="tel" class="form-control" formControlName="Mobile">
+        </div>
+
+        <!-- Department -->
+        <div class="col-md-6">
+          <label class="form-label">Department</label>
+          <select class="form-select" formControlName="Departmentnm">
+            <option value="" disabled>Select Department</option>
+            <option *ngFor="let dept of departments" [value]="dept.id">{{ dept.departmentnm || dept.name }}</option>
+          </select>
+        </div>
+
+        <!-- Designation -->
+        <div class="col-md-6">
+          <label class="form-label">Designation</label>
+          <select class="form-select" formControlName="Designationnm" [disabled]="!designationsForSelectedDept.length">
+            <option value="" disabled *ngIf="!designationsForSelectedDept.length">Select Department first</option>
+            <option *ngFor="let dg of designationsForSelectedDept" [value]="dg.id">{{ dg.name }}</option>
+          </select>
+        </div>
+
+        <!-- Joining Date -->
+        <div class="col-md-6">
+          <label class="form-label">Joining Date</label>
+          <input class="form-control" placeholder="yyyy-mm-dd" name="JoiningDate" ngbDatepicker #d="ngbDatepicker" formControlName="JoiningDate" (click)="d.toggle()" />
+        </div>
+
+        <!-- Profile Picture -->
+        <div class="col-md-6">
+          <label class="form-label">Profile Picture</label>
+          <input type="file" class="form-control" (change)="onFileSelected($event)" accept="image/*">
+          <div *ngIf="previewUrl" class="mt-2 text-center">
+            <img [src]="previewUrl" alt="Preview" width="100" height="100" style="border-radius: 50%;">
+          </div>
+        </div>
+
+        <!-- Salary -->
+        <div class="col-md-6">
+          <label class="form-label">Basic Salary</label>
+          <input type="number" class="form-control" formControlName="BasicSalary">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Pf</label>
+          <input type="number" class="form-control" formControlName="Pf">
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-success w-25" (click)="edit(); modal.close('Save click')">Save</button>
+  </div>
+</ng-template>
+

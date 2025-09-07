@@ -5,10 +5,13 @@ import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './auth.guard';
 import { ManagerDashboardComponent } from './managerdashboard/managerdashboard.component';
 import { AccDashboardComponent } from './acc-dashboard/acc-dashboard.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
 
     { path: 'account/dashboard', component: AccDashboardComponent },
+      { path: 'profile/:id', component: ProfileComponent },
+
 
   { path: '', component: LoginComponent },
 

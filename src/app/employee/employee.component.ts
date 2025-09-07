@@ -5,6 +5,7 @@ import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 export interface Employee {
   id: number;
@@ -73,7 +74,12 @@ export class EmployeeComponent {
   searchName = '';
   showPassword = false;
 
-  constructor(private modalService: NgbModal, private http: HttpClient, fb: FormBuilder) {
+  constructor(
+    private modalService: NgbModal,
+    private http: HttpClient,
+    private fb: FormBuilder,
+    private router: Router
+  ) {
     this._frmGroup = fb.group({
       Nm: ['', [Validators.required]],
       Email: ['', [Validators.required, Validators.email]],
@@ -354,5 +360,10 @@ export class EmployeeComponent {
       },
       error: () => { this.isVerifyingEmail = false; this.showToast('Server Error ❌', 'error'); }
     });
+  }
+
+  // ✅ NEW - Navigate to Profile page with employeeId
+  viewEmployee(id: number) {
+    this.router.navigate(['/profile', id]);
   }
 }

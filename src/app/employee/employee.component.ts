@@ -5,7 +5,7 @@ import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 export interface Employee {
   id: number;
@@ -15,10 +15,10 @@ export interface Employee {
   departmentnm: string;
   mobile: string;
   pwd: string;
-  BasicSalary: number;
+  basicSalary: number;
   pf: number;
-  JoiningDate?: string;
-  ProfilePic?: string;
+  joiningDate?: string;
+  profilePic?: string;
 }
 
 interface Department {
@@ -38,6 +38,7 @@ interface Designation {
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     NgbDatepickerModule,
     NgbNavModule,
     HttpClientModule,
@@ -78,7 +79,8 @@ export class EmployeeComponent {
     private modalService: NgbModal,
     private http: HttpClient,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this._frmGroup = fb.group({
       Nm: ['', [Validators.required]],
@@ -95,6 +97,13 @@ export class EmployeeComponent {
   }
 
   ngOnInit(): void {
+    this.route.queryParamMap.subscribe(params => {
+      const tab = params.get('tab');
+      if (tab) {
+        this.active = +tab;
+        if (this.active === 2) this.loadEmployees();
+      }
+    });
     this.loadDepartments();
     this._frmGroup.get('Departmentnm')?.valueChanges.subscribe((depId: number) => {
       if (depId) this.loadDesignationsByDepartment(depId);
@@ -132,12 +141,16 @@ export class EmployeeComponent {
     });
   }
 
-  onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
-    if (this.selectedFile) {
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.selectedFile = input.files[0];
       const reader = new FileReader();
-      reader.onload = () => this.previewUrl = reader.result;
+      reader.onload = () => { this.previewUrl = reader.result as string; };
       reader.readAsDataURL(this.selectedFile);
+    } else {
+      this.selectedFile = null;
+      this.previewUrl = 'assets/default-profile.png';
     }
   }
 
@@ -174,7 +187,6 @@ export class EmployeeComponent {
     formData.append('BasicSalary', String(this._frmGroup.value.BasicSalary));
     formData.append('Pf', String(this._frmGroup.value.Pf));
     formData.append('JoiningDate', formattedDate);
-
     if (this.selectedFile) formData.append('ProfilePic', this.selectedFile);
 
     if (this.currentEditingEmployeeId) {
@@ -191,13 +203,21 @@ export class EmployeeComponent {
         }
       });
     } else {
-      this.http.post<Employee>(`${this.baseUrl}/Employee`, formData).subscribe({
+      this.http.post<any>(`${this.baseUrl}/Employee`, formData).subscribe({
         next: (res) => {
           this.showToast('Employee Added Successfully 🎉', 'success');
           this.resetForm();
           this.loadEmployees();
           this.active = 2;
-          this.sendOfferLetter(res);
+
+          // 🔥 जर backend ने full employee परत केला असेल
+          if (res && res.id) {
+            this.sendOfferLetter(res);
+          } else {
+            // backend फक्त message परत करत असेल तर employee list मधून शोध
+            const savedEmp = this.employee.find(e => e.email === this._frmGroup.value.Email);
+            if (savedEmp) this.sendOfferLetter(savedEmp);
+          }
         },
         error: err => {
           console.error('Error adding employee:', err);
@@ -208,21 +228,19 @@ export class EmployeeComponent {
   }
 
   sendOfferLetter(emp: Employee) {
-    const totalSalary = Number(emp.BasicSalary) + Number(emp.pf);
-
+    const totalSalary = Number(emp.basicSalary) + Number(emp.pf);
     const payload = {
       id: emp.id,
       nm: emp.nm,
       email: emp.email,
       pwd: emp.pwd,
       mobile: emp.mobile,
-      profilePic: '',
+      profilePic: emp.profilePic ?? '',
       designationnm: emp.designationnm,
       companyName: 'Abhishek IT Soln Pvt. Ltd.',
-      joiningDate: emp.JoiningDate,
+      joiningDate: emp.joiningDate,
       salary: totalSalary.toString()
     };
-
     this.http.post(`${this.baseUrl}/Email/SendOfferLetter`, payload).subscribe({
       next: () => this.showToast('Offer Letter sent successfully 📩', 'success'),
       error: err => {
@@ -251,29 +269,26 @@ export class EmployeeComponent {
       const dep = this.departments.find(d => (d.departmentnm ?? d.name) === employeeToEdit.departmentnm);
       if (dep) {
         let ngbDate: any = null;
-        if (employeeToEdit.JoiningDate) {
-          const dt = new Date(employeeToEdit.JoiningDate);
+        if (employeeToEdit.joiningDate) {
+          const dt = new Date(employeeToEdit.joiningDate);
           ngbDate = { year: dt.getFullYear(), month: dt.getMonth() + 1, day: dt.getDate() };
         }
-
         this._frmGroup.patchValue({
           Nm: employeeToEdit.nm,
           Email: employeeToEdit.email,
           Mobile: employeeToEdit.mobile,
           Pwd: employeeToEdit.pwd,
           Departmentnm: dep.id,
-          BasicSalary: employeeToEdit.BasicSalary,
+          BasicSalary: employeeToEdit.basicSalary,
           Pf: employeeToEdit.pf,
           JoiningDate: ngbDate
         });
-
         this.loadDesignationsByDepartment(dep.id);
         setTimeout(() => {
           const desig = this.designationsForSelectedDept.find(d => d.name === employeeToEdit.designationnm);
           this._frmGroup.patchValue({ Designationnm: desig?.id || '' });
         }, 300);
-
-        this.previewUrl = employeeToEdit.ProfilePic ? `${this.baseUrl}/${employeeToEdit.ProfilePic}` : null;
+        this.previewUrl = employeeToEdit.profilePic ? `${this.baseUrl}/${employeeToEdit.profilePic}` : null;
       }
     } else this.currentEditingEmployeeId = null;
 
@@ -362,8 +377,15 @@ export class EmployeeComponent {
     });
   }
 
-  // ✅ NEW - Navigate to Profile page with employeeId
   viewEmployee(id: number) {
     this.router.navigate(['/profile', id]);
+  }
+
+  goToDetailsTab() {
+    this.active = 1;
+  }
+
+  getProfilePic(path?: string): string {
+    return path ? `${this.baseUrl}/${path}` : 'assets/default-profile.png';
   }
 }

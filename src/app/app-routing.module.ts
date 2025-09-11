@@ -8,12 +8,10 @@ import { AccDashboardComponent } from './acc-dashboard/acc-dashboard.component';
 import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
-
-    { path: 'account/dashboard', component: AccDashboardComponent },
-      { path: 'profile/:id', component: ProfileComponent },
-
-
   { path: '', component: LoginComponent },
+
+  // Profile page
+{ path: 'profile/:id', component: ProfileComponent },
 
   // HR Dashboard
   {
@@ -34,7 +32,7 @@ const routes: Routes = [
     data: { expectedRole: 'account' }
   },
 
-  // Salary Notification (HR किंवा Account दोघे वापरू शकतील तर data देऊ नका)
+  // Salary Notification
   {
     path: 'salarynotification',
     loadComponent: () =>
@@ -44,7 +42,7 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
 
-  // ✅ Manager Dashboard
+  // Manager Dashboard
   {
     path: 'manager-dashboard',
     component: ManagerDashboardComponent,
@@ -61,7 +59,7 @@ const routes: Routes = [
       ),
   },
 
-  // Payments (समजा फक्त account role ला पाहिजे असेल तर)
+  // Payments
   {
     path: 'payment',
     loadComponent: () =>

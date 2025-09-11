@@ -1,122 +1,109 @@
 <form [formGroup]="_frmGroup" (ngSubmit)="Login()">
   <div class="login-container">
-    <!-- Left Panel -->
-    <div class="left-panel">
-      <h1><i class="bi bi-unity"></i> StaffEase</h1>
-      <br>
-      <p>Welcome to StaffEase!!</p>
-    </div>
+    <div class="main-card">
 
-    <!-- Right Panel -->
-    <div class="right-panel">
-      <!-- Top-right User Type Dropdown -->
-      <div class="user-type-dropdown">
-        <select class="form-select" formControlName="UserType" required>
-          <option value="" disabled>-- Select User Type --</option>
-          <option value="hr">HR</option>
-          <option value="account">Account</option>
-          <option value="manager">Manager</option>
-        </select>
-      </div>
-
-      <!-- debug -->
-      <!-- {{ _frmGroup.value | json }} -->
-
-      <h2>Login</h2>
-
-      <!-- User ID -->
-      <input type="number" placeholder="Id" formControlName="Id" required>
-      <div class="text-danger" *ngIf="_frmGroup.get('Id')?.touched && _frmGroup.get('Id')?.invalid">
-        User ID is required
-      </div>
-
-      <!-- Password -->
-      <input type="password" placeholder="Password" formControlName="Pwd" required>
-      <div class="text-danger" *ngIf="_frmGroup.get('Pwd')?.touched && _frmGroup.get('Pwd')?.invalid">
-        Password is required
-      </div>
-
-      <!-- Error message -->
-      <div class="row mb-1" *ngIf="autherror">
-        <div class="alert alert-danger" role="alert">
-          {{ autherror }}
+      <!-- Left Square -->
+      <div class="left-square">
+        <div class="brand-box">
+          <h1><i class="bi bi-unity"></i> StaffEase</h1>
+          <p>Welcome to StaffEase!!</p>
         </div>
       </div>
 
-      <!-- Login Button + Forgot link -->
-      <div class="d-flex justify-content-between align-items-center">
-        <button type="submit" class="login-btn">Login</button>
+      <!-- Right Login Section -->
+      <div class="right-login">
+        <div class="login-box">
 
-        <!-- Forgot link only if usertype selected -->
-        <button type="button" class="btn btn-link p-0"
-                *ngIf="_frmGroup.get('UserType')?.value"
-                (click)="openForgot()">Forgot password?</button>
-      </div>
-
-      <!-- Forgot Password Section -->
-      <div *ngIf="forgot.open" class="card mt-4 p-3 shadow-sm">
-
-        <!-- Step 1: email + send OTP -->
-        <ng-container *ngIf="forgot.step === 1">
-          <h6>Forgot Password</h6>
-          <p class="text-muted mb-2">Enter your registered email !</p>
-
-          <div [formGroup]="forgotForm">
-            <input type="email" class="form-control" formControlName="email"
-                   placeholder="registered@company.com" />
-
-            <button class="btn btn-secondary mt-3" type="button"
-                    (click)="sendOtp()" [disabled]="forgotForm.invalid || sendingOtp">
-              {{ sendingOtp ? 'Sending…' : 'Send OTP' }}
-            </button>
+          <!-- User Type Dropdown -->
+          <div class="mb-3">
+            <select class="form-select user-type" formControlName="UserType" required>
+              <option value="" disabled>-- Select User Type --</option>
+              <option value="hr">HR</option>
+              <option value="account">Account</option>
+              <option value="manager">Manager</option>
+            </select>
           </div>
-        </ng-container>
 
-        <!-- Step 2: verify OTP -->
-        <ng-container *ngIf="forgot.step === 2">
-          <h6>Verify OTP</h6>
-          <p class="text-muted">OTP sent to <b>{{ forgotForm.value.email }}</b></p>
+          <h2 class="mb-3">Login</h2>
 
-          <div [formGroup]="otpForm">
-            <input type="text" class="form-control" formControlName="otp"
-                   maxlength="6" placeholder="6-digit OTP" />
-
-            <div class="d-flex gap-2 mt-3">
-              <button class="btn btn-secondary" type="button"
-                      (click)="verifyOtp()" [disabled]="otpForm.invalid || verifyingOtp">
-                {{ verifyingOtp ? 'Verifying…' : 'Verify OTP' }}
-              </button>
-
-              <button class="btn btn-link" type="button"
-                      (click)="resendOtp()" [disabled]="resendCooldown>0">
-                Resend OTP <span *ngIf="resendCooldown>0">({{resendCooldown}}s)</span>
-              </button>
-            </div>
+          <!-- User ID -->
+          <input type="number" class="form-control mb-2" placeholder="User ID" formControlName="Id" required>
+          <div class="text-danger small" *ngIf="_frmGroup.get('Id')?.touched && _frmGroup.get('Id')?.invalid">
+            User ID is required
           </div>
-        </ng-container>
 
-        <!-- Step 3: reset password -->
-        <ng-container *ngIf="forgot.step === 3">
-          <h6>Set New Password</h6>
-          <div [formGroup]="resetForm">
-            <input type="password" class="form-control" formControlName="newPassword"
-                   placeholder="New password" />
-            <input type="password" class="form-control mt-2" formControlName="confirm"
-                   placeholder="Confirm new password" />
-
-            <small class="text-muted">
-              Min 8 chars, must include letters & numbers.
-            </small>
-
-            <button class="btn btn-success mt-3" type="button"
-                    (click)="resetPassword()" [disabled]="resetForm.invalid || resetting">
-              {{ resetting ? 'Saving…' : 'Update Password' }}
-            </button>
+          <!-- Password -->
+          <input type="password" class="form-control mb-2" placeholder="Password" formControlName="Pwd" required>
+          <div class="text-danger small" *ngIf="_frmGroup.get('Pwd')?.touched && _frmGroup.get('Pwd')?.invalid">
+            Password is required
           </div>
-        </ng-container>
 
-        <!-- Close -->
-        <button class="btn btn-outline-secondary mt-3" (click)="closeForgot()">Close</button>
+          <!-- Error -->
+          <div *ngIf="autherror" class="alert alert-danger py-1 px-2 small">
+            {{ autherror }}
+          </div>
+
+          <!-- Login + Forgot -->
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <button type="submit" class="btn btn-primary login-btn">Login</button>
+            <button type="button" class="btn btn-link forgot-link"
+                    *ngIf="_frmGroup.get('UserType')?.value"
+                    (click)="openForgot()">Forgot password?</button>
+          </div>
+
+          <!-- Forgot Section -->
+          <div *ngIf="forgot.open" class="forgot-box mt-4">
+
+            <!-- Step 1 -->
+            <ng-container *ngIf="forgot.step === 1">
+              <h6>Forgot Password</h6>
+              <p class="text-muted">Enter your registered email</p>
+              <div [formGroup]="forgotForm">
+                <input type="email" class="form-control mb-2" formControlName="email" placeholder="registered@company.com">
+                <button class="btn btn-secondary w-100" type="button"
+                        (click)="sendOtp()" [disabled]="forgotForm.invalid || sendingOtp">
+                  {{ sendingOtp ? 'Sending…' : 'Send OTP' }}
+                </button>
+              </div>
+            </ng-container>
+
+            <!-- Step 2 -->
+            <ng-container *ngIf="forgot.step === 2">
+              <h6>Verify OTP</h6>
+              <p class="text-muted">OTP sent to <b>{{ forgotForm.value.email }}</b></p>
+              <div [formGroup]="otpForm">
+                <input type="text" class="form-control mb-2" formControlName="otp" maxlength="6" placeholder="6-digit OTP">
+                <div class="d-flex gap-2">
+                  <button class="btn btn-secondary flex-grow-1" type="button"
+                          (click)="verifyOtp()" [disabled]="otpForm.invalid || verifyingOtp">
+                    {{ verifyingOtp ? 'Verifying…' : 'Verify OTP' }}
+                  </button>
+                  <button class="btn btn-link" type="button"
+                          (click)="resendOtp()" [disabled]="resendCooldown>0">
+                    Resend OTP <span *ngIf="resendCooldown>0">({{resendCooldown}}s)</span>
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- Step 3 -->
+            <ng-container *ngIf="forgot.step === 3">
+              <h6>Set New Password</h6>
+              <div [formGroup]="resetForm">
+                <input type="password" class="form-control mb-2" formControlName="newPassword" placeholder="New password">
+                <input type="password" class="form-control mb-2" formControlName="confirm" placeholder="Confirm password">
+                <small class="text-muted">Min 8 chars, must include letters & numbers.</small>
+                <button class="btn btn-success w-100 mt-2" type="button"
+                        (click)="resetPassword()" [disabled]="resetForm.invalid || resetting">
+                  {{ resetting ? 'Saving…' : 'Update Password' }}
+                </button>
+              </div>
+            </ng-container>
+
+            <button class="btn btn-outline-secondary w-100 mt-3" (click)="closeForgot()">Close</button>
+          </div>
+
+        </div>
       </div>
     </div>
   </div>

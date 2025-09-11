@@ -1,124 +1,153 @@
-/* Whole container */
+/* ===== Container (blurred bg) ===== */
 .login-container {
   display: flex;
+  align-items: center;
+  justify-content: center;
   height: 100vh;
   width: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  position: relative;
   overflow: hidden;
-  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background-color: #ffffff;
 }
 
-/* Left branding panel */
-/* Left branding panel */
-.left-panel {
-  flex: 1;
-  background: linear-gradient(135deg, #007bff, #00bcd4);
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 3rem;
-  border-top-right-radius: 80px;
-  border-bottom-right-radius: 80px;
-}
-
-.left-panel h1 {
-  font-size: 2.2rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-}
-.left-panel p {
-  font-size: 1.1rem;
-  opacity: 0.9;
-}
-
-/* Right login form panel */
-.right-panel {
-  flex: 1;
-  background: #f9f9f9;
-  padding: 3rem 4rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-shadow: -4px 0 12px rgba(0,0,0,0.05);
-}
-
-/* Dropdown on top */
-.user-type-dropdown {
+.login-container::before {
+  content: "";
   position: absolute;
-  top: 20px;
-  right: 40px;
-  width: 180px;
+  inset: 0;
+  background: url('/assets/image1.jpg') no-repeat center center / cover;
+  filter: blur(6px) brightness(0.85);
+  transform: scale(1.03);
+  z-index: 0;
 }
 
-/* Headings */
-.right-panel h2 {
-  margin-bottom: 1.5rem;
-  color: #333;
-  font-weight: 600;
+/* ===== Outer Main Card ===== */
+/* ===== Outer Main Card ===== */
+.main-card {
+  display: flex;
+  width: 1200px;          /* increased from 900px */
+  max-width: 95%;         /* responsive limit */
+  border-radius: 18px;
+  padding: 30px;          /* padding थोडं वाढवलं */
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 18px 50px rgba(8, 30, 50, 0.16);
+  z-index: 2;
+  gap: 30px;              /* blue/grey card आणि login card मधला gap थोडा वाढवला */
 }
 
-/* Inputs */
-.right-panel input,
-.right-panel select {
+/* Responsive */
+@media (max-width: 768px) {
+  .main-card {
+    flex-direction: column;
+    width: 95%;           /* mobile वर almost full width */
+  }
+  .left-square, .right-login {
+    min-height: 250px;    /* थोडा height वाढवला */
+  }
+}
+
+/* ===== Left Blue Card ===== */
+/* ===== Left Grey/Black Card with Paper Shades ===== */
+.left-square {
+  flex: 1;
+  min-width: 300px;
+  border-radius: 14px;
+  background: 
+    /* paper shades / noise effect */
+    repeating-linear-gradient(
+      45deg,
+      rgba(255,255,255,0.05) 0px,
+      rgba(255,255,255,0.05) 2px,
+      transparent 2px,
+      transparent 6px
+    ),
+    linear-gradient(135deg, #3a3a3a, #0d0d0d); /* grey to black */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff; /* text white */
+  padding: 40px 20px;
+  text-align: center;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.4); /* darker shadow */
+  background-blend-mode: overlay; /* blend paper shade with base */
+}
+
+.left-square h1 {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.left-square p {
+  font-size: 16px;
+  opacity: 0.9;
+  color: #ffffff;
+}
+
+/* ===== Right Login Card ===== */
+.right-login {
+  flex: 1.2;
+  border-radius: 14px;
+  padding: 40px;
+  background: #fff;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+
+.right-login h2 {
+  margin-bottom: 24px;
+  font-size: 26px;
+  font-weight: 700;
+  color: #12233a;
+}
+
+/* ===== Form Controls ===== */
+.right-login .form-control {
   width: 100%;
-  padding: 0.75rem 1rem;
-  margin-bottom: 1rem;
-  border-radius: 0.4rem;
-  border: 1px solid #ddd;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(20,40,70,0.12);
   background: #fff;
   font-size: 15px;
-  transition: 0.2s;
+  color: #12233a;
+  transition: all 0.2s ease;
 }
-.right-panel input:focus,
-.right-panel select:focus {
+
+.right-login .form-control:focus {
+  border-color: #0072ff;
+  box-shadow: 0 0 8px rgba(0,114,255,0.25);
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0,123,255,0.15);
 }
 
-/* Login button */
+/* Buttons */
 .login-btn {
-  background: #007bff;
-  color: white;
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: 10px;
   border: none;
-  border-radius: 0.4rem;
-  padding: 0.6rem 1.4rem;
+  background: linear-gradient(135deg, #333333, #000000); /* grey to black */
+  color: #ffffff; /* white text */
+  font-weight: 700;
   font-size: 15px;
-  transition: 0.2s;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
+
 .login-btn:hover {
-  background: #0069d9;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4); /* darker shadow */
 }
 
-/* Forgot link */
-.btn-link {
-  font-size: 14px;
-  color: #007bff;
-  text-decoration: none;
-}
-.btn-link:hover {
-  text-decoration: underline;
-}
 
-/* Forgot password card */
-.card {
-  background: #fff;
-  border: 1px solid #eee;
-  border-radius: 0.5rem;
-}
-.card h6 {
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-.card input {
-  margin-bottom: 0.6rem;
-}
-
-/* Alerts */
-.alert {
-  font-size: 14px;
-  padding: 0.6rem 1rem;
-  border-radius: 0.4rem;
+/* Responsive */
+@media (max-width: 768px) {
+  .main-card {
+    flex-direction: column;
+  }
+  .left-square, .right-login {
+    min-height: 220px;
+  }
 }

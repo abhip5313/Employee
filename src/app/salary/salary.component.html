@@ -11,16 +11,10 @@
           <form [formGroup]="_frmGroup" (ngSubmit)="save()">
             <div class="row mb-3">
               <div class="col-md-6">
-                <label class="form-label">Department</label>
-                <select class="form-select" formControlName="departmentId">
-                  <option value="">Select Department</option>
-                  <ng-container *ngFor="let dept of departments">
-                    <option *ngIf="dept.isActive" [value]="dept.id">
-                      {{ dept.departmentnm }}
-                    </option>
-                  </ng-container>
-                </select>
-              </div>
+  <label class="form-label">Department</label>
+  <input type="text" class="form-control" formControlName="departmentName" readonly />
+</div>
+
 
               <div class="col-md-6">
                 <label class="form-label">Employee Id</label>
@@ -33,13 +27,13 @@
               <div class="col-md-6">
                 <label class="form-label">Basic Salary</label>
                 <input type="text" class="form-control" placeholder="Insert Salary"
-                  formControlName="basicSalary" readonly />
+                  formControlName="basicSalary"  readonly/>
               </div>
 
               <div class="col-md-6">
                 <label class="form-label">Employee Name</label>
                 <input type="text" class="form-control" placeholder="Employee name"
-                  formControlName="employeeName" readonly />
+                  formControlName="employeeName"  readonly/>
               </div>
             </div>
 

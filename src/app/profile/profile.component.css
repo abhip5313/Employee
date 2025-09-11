@@ -1,0 +1,39 @@
+.profile-pic {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;       /* image crop न होता fit होईल */
+  border-radius: 60%;      /* ✅ circle shape */
+  border: 3px solid #007bff;
+  display: block;
+  margin: 0 auto 15px auto; /* center मध्ये आणायला */
+}
+
+.profile-name {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.col-md-4 p {
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+.nav-tabs .nav-link {
+  font-weight: 500;
+  color: #495057;
+}
+
+.nav-tabs .nav-link.active {
+  color: #007bff;
+  border-color: #007bff #007bff #fff;
+}
+
+.tab-content {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 0 0 5px 5px;
+}
+
+.border-end {
+  border-right: 1px solid #dee2e6 !important;
+}

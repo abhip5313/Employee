@@ -14,6 +14,7 @@ import { ManagerEmployeesComponent } from './manager-employees/manager-employees
 import { ManagerEmployeeAccessComponent } from './manager-employee-access/manager-employee-access.component';
 import { LoginComponent } from './login/login.component';
 import { AccDashboardComponent } from './acc-dashboard/acc-dashboard.component';
+import { ProfileComponent } from './profile/profile.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -31,9 +32,12 @@ export const routes: Routes = [
 
 
 
+
   // Manager dashboard route
   { path: 'manager-dashboard', component: ManagerDashboardComponent }, 
     { path: '', redirectTo: 'login', pathMatch: 'full' },  // 👈 प्रोजेक्ट run होताच login
+      { path: 'profile/:id', component: ProfileComponent },
+
  
 
   { path: 'salarynotification', component: SalaryNotificationComponent },

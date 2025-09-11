@@ -2,15 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { NgbModal, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';  // ✅ correct import
+import autoTable from 'jspdf-autotable';
 
 export interface Salary {
   employeeId: number;
   employeeName: string;
-  departmentId: number;
+  departmentName: string;
   basicSalary: number;
   allowances: number;
   deductions: number;
@@ -19,7 +19,6 @@ export interface Salary {
 
 export interface PaymentDto {
   id: number;
-  departmentId: number;
   departmentName: string;
   employeeId: number;
   employeeName: string;
@@ -48,15 +47,14 @@ export class SalaryComponent implements OnInit {
   selectedSlip: PaymentDto | null = null;
 
   constructor(
-    private modalService: NgbModal,
     private https: HttpClient,
     fb: FormBuilder,
     private datePipe: DatePipe
   ) {
     this._frmGroup = fb.group({
-      departmentId: ['', Validators.required],
       employeeId: ['', Validators.required],
       employeeName: ['', Validators.required],
+      departmentName: [''],   // readonly field
       basicSalary: ['', Validators.required],
       allowances: ['', Validators.required],
       deductions: ['', Validators.required],
@@ -65,16 +63,7 @@ export class SalaryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadDepartments();
     this.loadPayments();
-  }
-
-  loadDepartments() {
-    this.https.get<any[]>('https://localhost:7165/api/Department')
-      .subscribe({
-        next: data => this.departments = data.filter(d => d.isActive),
-        error: err => console.error('Failed to load departments:', err)
-      });
   }
 
   loadPayments(): void {
@@ -87,32 +76,35 @@ export class SalaryComponent implements OnInit {
 
   onEmployeeIdChange() {
     const empId = this._frmGroup.value.employeeId;
-    if (empId) {
-      this.https.get<any>(`https://localhost:7165/api/Salary/GetEmployeeDetails/${empId}`)
-        .subscribe({
-          next: res => {
-            const dept = this.departments.find(d => d.departmentnm === res.departmentnm);
+    if (!empId) return;
 
-            if (dept && dept.isActive === false) {
-              Swal.fire('Department is inactive', '', 'warning');
-            }
-
+    this.https.get<any>(`https://localhost:7165/api/Salary/GetEmployeeInfo/${empId}`)
+      .subscribe({
+        next: res => {
+          if (res) {
             this._frmGroup.patchValue({
-              employeeName: res.employeeName,
-              basicSalary: res.basicSalary,
-              departmentId: dept ? dept.id : ''
-            });
-          },
-          error: () => {
-            Swal.fire('Employee Not Found', '', 'error');
+  employeeName: res.employeeName,
+  basicSalary: res.basicSalary,
+  departmentName: res.departmentName   // <-- corrected
+});
+          } else {
+            Swal.fire('No data found', '', 'info');
             this._frmGroup.patchValue({
               employeeName: '',
               basicSalary: '',
-              departmentId: ''
+              departmentName: ''
             });
           }
-        });
-    }
+        },
+        error: () => {
+          Swal.fire('Employee Not Found', '', 'error');
+          this._frmGroup.patchValue({
+            employeeName: '',
+            basicSalary: '',
+            departmentName: ''
+          });
+        }
+      });
   }
 
   save() {
@@ -126,12 +118,6 @@ export class SalaryComponent implements OnInit {
     this.https.post('https://localhost:7165/api/Salary', salaryData)
       .subscribe({
         next: () => {
-          this.https.post('https://localhost:7165/api/SalaryNotification', salaryData)
-            .subscribe({
-              next: () => console.log('Notification sent to Accounts Dept'),
-              error: (err) => console.error('Failed to send notification:', err)
-            });
-
           Swal.fire('Success', 'Salary saved & Notification sent', 'success');
           this._frmGroup.reset();
           this.loadPayments();
@@ -184,7 +170,6 @@ export class SalaryComponent implements OnInit {
       ]
     });
 
-    // replace slashes in date for safe filename
     const safeDate = (p.payDate || '').replace(/[\/\\:]/g, '-');
     doc.save(`SalarySlip_${p.employeeName}_${safeDate}.pdf`);
   }

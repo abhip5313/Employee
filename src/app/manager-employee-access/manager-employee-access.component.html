@@ -1,35 +1,48 @@
 <div class="container mt-4">
   <h3 class="mb-4 text-primary text-center">Assign Department Access to Manager Employee</h3>
 
-  <!-- Manager Selection -->
-  <div class="mb-3">
-    <label class="form-label">Select Manager Employee</label>
-    <select class="form-select" [(ngModel)]="selectedManagerId">
-      <option value="">-- Select Employee --</option>
-      <option *ngFor="let emp of employees" [value]="emp.id">{{emp.name}} ({{emp.email}})</option>
-    </select>
-  </div>
+  <div class="row">
+    <!-- Left Side: Manager Selection -->
+    <div class="col-md-4 mb-3">
+      <div class="card shadow p-3 h-100">
+        <h5 class="mb-3">Select Manager Employee</h5>
+        <select class="form-select" [(ngModel)]="selectedManagerId">
+          <option value="">-- Select Employee --</option>
+          <option *ngFor="let emp of employees" [value]="emp.id">
+            {{ emp.name }} ({{ emp.email }})
+          </option>
+        </select>
 
-  <button class="btn btn-primary mb-3" (click)="viewAccess()" [disabled]="!selectedManagerId">
-    View Access
-  </button>
-
-  <!-- Departments List -->
-  <div *ngIf="departments.length > 0" class="card p-3 shadow">
-    <h5 class="mb-3">Departments</h5>
-    <div *ngFor="let dept of departments" class="form-check form-switch mb-2">
-      <input
-        class="form-check-input"
-        type="checkbox"
-        [(ngModel)]="dept.hasAccess"
-        [id]="'dept_'+dept.id"
-        (change)="toggleAccess(dept)"
-      >
-      <label class="form-check-label" [for]="'dept_'+dept.id">{{ dept.departmentnm }}</label>
+        <!-- Button with dark theme -->
+        <button class="btn custom-dark-btn mt-3 w-100" (click)="viewAccess()" [disabled]="!selectedManagerId">
+          View Access
+        </button>
+      </div>
     </div>
 
-    <button class="btn btn-success mt-3" (click)="saveAccess()" [disabled]="!departments.length">
-      Save Access
-    </button>
+    <!-- Right Side: Departments List -->
+    <div class="col-md-8 mb-3">
+      <div class="card shadow p-3 h-100" *ngIf="departments.length > 0">
+        <h5 class="mb-3">Departments</h5>
+        <div *ngFor="let dept of departments" class="d-flex justify-content-between align-items-center mb-2">
+          <span>{{ dept.departmentnm }}</span>
+          <!-- Toggle Button -->
+          <div class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [(ngModel)]="dept.hasAccess"
+              [id]="'dept_' + dept.id"
+              (change)="toggleAccess(dept)"
+            />
+          </div>
+        </div>
+
+        <!-- Save button with dark theme -->
+        <button class="btn custom-dark-btn mt-3 float-end" (click)="saveAccess()" [disabled]="!departments.length">
+          Save Access
+        </button>
+      </div>
+    </div>
   </div>
 </div>

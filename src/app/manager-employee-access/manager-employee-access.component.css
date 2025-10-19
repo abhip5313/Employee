@@ -1,35 +1,36 @@
-.container {
-  max-width: 600px;
-  margin: 0 auto;
+.custom-dark-btn {
+  background-color: #333;     /* dark grey */
+  color: #fff;                /* white text */
+  border: 1px solid #444;     /* subtle border */
+  transition: background-color 0.3s ease;
 }
 
-h3 {
-  font-weight: 600;
+.custom-dark-btn:hover {
+  background-color: #000;     /* black on hover */
+  color: #fff;
+  border-color: #555;
 }
 
-.card {
-  margin-top: 20px;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+.custom-dark-btn:disabled {
+  background-color: #666;
+  color: #ddd;
+  border-color: #666;
+  cursor: not-allowed;
 }
 
-.form-check {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+
+/* Enlarge Bootstrap form-switch toggle */
+.form-check-input {
+  width: 3rem;       /* Default ~2rem */
+  height: 1.6rem;    /* Default ~1rem */
+  cursor: pointer;
 }
 
-.btn {
-  width: 100%;
+.form-check-input:checked {
+  background-color: #333;
+  border-color: #444;
 }
 
-.btn-success {
-  background-color: #28a745;
-  border-color: #28a745;
-}
-
-.btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
+.form-check-input::before {
+  transform: scale(1.2); /* Optional: makes the knob bigger */
 }

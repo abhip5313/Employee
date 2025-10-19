@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import Swal from 'sweetalert2';
 
 interface ManagerEmployee {
   id: number;
@@ -38,22 +37,37 @@ export class ManagerEmployeeAccessComponent implements OnInit {
     this.loadManagers();
   }
 
+  // Simple toast function
+  showToast(message: string, type: 'success' | 'error' | 'info' | 'warning') {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.className = `toast ${type}`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+
   loadManagers() {
     this.http.get<ManagerEmployee[]>(`${this.employeeApiUrl}/GetAll`).subscribe({
       next: data => this.employees = data ?? [],
-      error: err => Swal.fire('Error', 'Failed to load managers', 'error')
+      error: () => this.showToast('Failed to load managers', 'error')
     });
   }
 
   viewAccess() {
-    if (!this.selectedManagerId) return;
+    if (!this.selectedManagerId) {
+      this.showToast('Please select a manager', 'warning');
+      return;
+    }
 
-    this.http.get<Department[]>(`${this.baseUrl}/Department/user-departments/${this.selectedManagerId}`).subscribe({
+    this.http.get<any[]>(`${this.baseUrl}/ManagerEmployeeDepartment/manager/${this.selectedManagerId}/departments`).subscribe({
       next: data => {
-        // backend returns departments with hasAccess true/false for this manager employee
-        this.departments = data ?? [];
+        this.departments = data.map(d => ({
+          id: d.departmentId,
+          departmentnm: d.departmentnm,
+          hasAccess: d.isActive ?? false
+        }));
       },
-      error: err => Swal.fire('Error', 'Failed to load department access', 'error')
+      error: () => this.showToast('Failed to load department access', 'error')
     });
   }
 
@@ -62,20 +76,29 @@ export class ManagerEmployeeAccessComponent implements OnInit {
   }
 
   saveAccess() {
-    if (!this.selectedManagerId) return;
+    if (!this.selectedManagerId) {
+      this.showToast('Please select a manager', 'warning');
+      return;
+    }
 
-    // send each department access separately
+    if (!this.departments.length) {
+      this.showToast('No departments to save', 'info');
+      return;
+    }
+
+    // Loop through each department and call the toggle API individually
     const requests = this.departments.map(d => ({
-      EmployeeId: this.selectedManagerId,
+      ManagerEmployeeId: this.selectedManagerId,
       DepartmentId: d.id,
-      HasAccess: d.hasAccess
+      IsActive: d.hasAccess
     }));
 
-    // call backend for each toggle (or send all at once if backend supports array)
-    this.http.post(`${this.baseUrl}/Department/update-access`, requests).subscribe({
-      next: () => Swal.fire('Success', 'Access updated successfully!', 'success'),
-      error: err => Swal.fire('Error', 'Failed to save access', 'error')
+    // Send each toggle update separately
+    requests.forEach(req => {
+      this.http.post(`${this.baseUrl}/ManagerEmployeeDepartment/update-toggle`, req).subscribe({
+        next: () => this.showToast(`Department "${this.departments.find(dep => dep.id === req.DepartmentId)?.departmentnm}" updated!`, 'success'),
+        error: () => this.showToast('Failed to save access', 'error')
+      });
     });
   }
-
 }
